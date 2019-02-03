@@ -20,10 +20,12 @@ public class Client {
     PrintWriter output;
     
     public void startClient() throws UnknownHostException, IOException{
+        // Connecting to the Server.
         socket = new Socket(HOSTNAME, PORT);
 
         output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-
+        
+        // Prompt to Enter Username/Password Combination.
         String username = JOptionPane.showInputDialog(null, "Enter Username");
 
         output.println(username);
@@ -33,6 +35,7 @@ public class Client {
         output.println(password);
         output.flush();
 
+        // Reading Server Response.
         read = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
         String response = read.readLine();
