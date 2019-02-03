@@ -45,14 +45,14 @@ public class Server {
 
     public void start() throws IOException {
         System.out.println("Connection Starting on: " + PORT);
-        
+        // Opening a Socket in the Server Side.
         serversocket = new ServerSocket(PORT);
 
-        //accept connection from client
+        // Waiting for connection from client.
         client = serversocket.accept();
 
         System.out.println("Waiting for Client");
-        
+        // Here the server has recived a Message. Starting Login.
             try {
                 Login();
             } catch (Exception e) {
@@ -61,7 +61,7 @@ public class Server {
     }
 
     private static void createConnection() {
-
+        // Creating a Connection to Derby Database
         try {
             conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
         } catch (SQLException ex) {
@@ -73,7 +73,7 @@ public class Server {
     }
 
     public void Login() throws Exception {
-        
+        // Reading Client Input
         input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
         String username = input.readLine();
@@ -82,12 +82,14 @@ public class Server {
         System.out.println("Password input : " + password);
         
         output = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
-
+        
+        // Executing a query to Get Username/password Comb. From database.
         stmt = conn.createStatement();
 
         ResultSet rs;
-        rs = stmt.executeQuery("SELECT USERNAME,PASSWORD FROM USERS");
+        rs = stmt.executeQuery("SELECT USERNAME,PASSWORD FROM USERS WHERE USERNAME = '"+username+"'");
 
+        // Verifying the Username/password and Returning the result.
         if (rs.next()) {
             if (username.equals(rs.getString("USERNAME")) && password.equals(rs.getString("PASSWORD"))) {
                                output.println("Welcome, " + username);
